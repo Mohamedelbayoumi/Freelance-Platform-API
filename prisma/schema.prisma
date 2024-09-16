@@ -1,0 +1,136 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id             Int                   @id @default(autoincrement())
+  first_name     String
+  last_name      String
+  phone_number   String                @unique
+  image_profile  String?
+  email          String                @unique
+  password       String
+  average_rating Decimal               @default(0) @db.Decimal(2, 1)
+  tasks          Task[]
+  Client_Review  Client_Review[]
+  notifications  Client_Notification[]
+}
+
+model Freelancer {
+  id                     Int                  @id @default(autoincrement())
+  first_name             String
+  last_name              String
+  phone_number           String               @unique
+  image_profile          String?
+  bio                    String?
+  hourly_rate            Int                  @default(0)
+  average_rating         Decimal              @default(0) @db.Decimal(2, 1)
+  profile_views_per_week Int                  @default(0) @db.SmallInt
+  week_views_start       DateTime             @default(now()) @db.Date
+  email                  String               @unique
+  password               String
+  reviews                Freelancer_Review[]
+  offers                 Offer[]
+  freelancer_links       Freelancer_Link[]
+  freelancer_projects    Freelancer_Project[]
+}
+
+model Task {
+  id                Int      @id @default(autoincrement())
+  title             String
+  description       String
+  min_price         Int
+  max_price         Int
+  created_at        DateTime @default(now()) @db.Timestamp()
+  deadline_duration Int      @db.SmallInt
+  is_opened         Boolean  @default(true)
+  no_of_offers      Int      @db.SmallInt
+  category          Category
+  client_id         Int
+  client            Client   @relation(fields: [client_id], references: [id])
+  keywords          Json
+  offers            Offer[]
+}
+
+model Client_Notification {
+  id                Int     @id @default(autoincrement())
+  notification_text String
+  seen              Boolean
+  client_id         Int
+  client            Client  @relation(fields: [client_id], references: [id])
+}
+
+model Client_Review {
+  id          Int     @id @default(autoincrement())
+  review_text String
+  rating      Decimal @db.Decimal(2, 1)
+  client_id   Int
+  client      Client  @relation(fields: [client_id], references: [id])
+}
+
+model Freelancer_Review {
+  id            Int        @id @default(autoincrement())
+  review_text   String
+  rating        Decimal    @db.Decimal(2, 1)
+  freelancer_id Int
+  freelancer    Freelancer @relation(fields: [freelancer_id], references: [id])
+}
+
+model Offer {
+  id                      Int        @id @default(autoincrement())
+  description             String
+  asking_price            Int
+  implementation_duration Int        @db.SmallInt
+  task_id                 Int
+  task                    Task       @relation(fields: [task_id], references: [id])
+  freelancer_id           Int
+  freelancer              Freelancer @relation(fields: [freelancer_id], references: [id])
+}
+
+model Freelancer_Link {
+  id            Int        @id @default(autoincrement())
+  link          String
+  freelancer_id Int
+  freelancer    Freelancer @relation(fields: [freelancer_id], references: [id])
+}
+
+model Freelancer_Project {
+  id             Int                        @id @default(autoincrement())
+  title          String
+  description    String
+  link           String?
+  project_images Freelancer_Project_Image[]
+  freelancer_id  Int
+  freelancer     Freelancer                 @relation(fields: [freelancer_id], references: [id])
+}
+
+model Freelancer_Project_Image {
+  id            Int                @id @default(autoincrement())
+  project_image String
+  project_id    Int
+  project       Freelancer_Project @relation(fields: [project_id], references: [id])
+}
+
+enum Category {
+  Graphic_Design
+  UI_UX_Design
+  Frontend_Development
+  Backend_Development
+  Mobile_Development
+  Desktop_Development
+  Game_Development
+  FullStack_Development
+  Marketing
+  Video_Editing
+}
