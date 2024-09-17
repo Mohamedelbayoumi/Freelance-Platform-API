@@ -16,10 +16,6 @@ export const checkAuthentication = (req: Request, res: Response, next: NextFunct
 
     const decodedToken = verify(extractedToken, process.env.JWT_SECRET_KEY as string) as ExtendedPayload
 
-    if (!decodedToken) {
-        throw new ApiError("Incorrect Token", 401)
-    }
-
     req.userId = decodedToken.userId
 
     next()

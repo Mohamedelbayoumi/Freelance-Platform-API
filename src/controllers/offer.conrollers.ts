@@ -13,8 +13,9 @@ export class OfferController {
     }
 
     public static async create(req: Request, res: Response) {
-        const freelancerId = 1
-        // const freelancerId = req.userId 
+
+        const freelancerId = req.userId
+
         const { implementationDuration, askingPrice, description, taskId } = req.body
 
         await OfferService.create(implementationDuration, askingPrice, description, taskId, freelancerId)
