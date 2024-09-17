@@ -32,6 +32,15 @@ export class TaskController {
 
     }
 
+    public static async getTask(req: Request, res: Response) {
+
+        const id = + req.params.id || 0
+
+        const task = await TaskService.findTaskById(id)
+
+        res.status(200).json({ task })
+    }
+
     public static async createTask(req: Request, res: Response) {
         await TaskService.createTask()
         res.status(201).json({ message: "task created" })

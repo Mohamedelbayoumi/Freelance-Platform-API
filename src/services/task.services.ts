@@ -80,6 +80,33 @@ export class TaskService {
         return tasks
     }
 
+    public static async findTaskById(id: number) {
+        return await prisma.task.findUnique({
+            where: {
+                id
+            },
+            select: {
+                title: true,
+                is_opened: true,
+                no_of_offers: true,
+                created_at: true,
+                min_price: true,
+                max_price: true,
+                category: true,
+                keywords: true,
+                description: true,
+                deadline_duration: true,
+                client: {
+                    select: {
+                        id: true,
+                        first_name: true,
+                        last_name: true
+                    }
+                }
+            }
+        })
+    }
+
     public static async findByFullText() {
 
     }

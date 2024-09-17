@@ -5,6 +5,8 @@ import { Request, Response, NextFunction } from 'express'
 
 import authRoutes from './routes/auth.routes'
 import taskRoutes from './routes/task.routes'
+import offerroutes from './routes/offer.routes'
+
 import { errorHandler } from './utils/global-error-handler'
 
 config()
@@ -24,8 +26,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 app.use('/api/v1', authRoutes)
-
 app.use('/api/v1', taskRoutes)
+app.use('/api/v1', offerroutes)
 
 app.use(errorHandler)
 
