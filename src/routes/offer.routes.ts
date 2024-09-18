@@ -5,8 +5,14 @@ import { checkAuthentication } from '../middlewares/auth.middleware'
 
 const router = Router()
 
-router.get('/offers', OfferController.getAll)
+const offerController = new OfferController()
 
-router.post('/offers', checkAuthentication, OfferController.create)
+router.get('/offers', offerController.getAll)
+
+router.post('/offers', checkAuthentication, offerController.create)
+
+router.patch('/offers/:id', checkAuthentication)
+
+router.delete('/offers/:id', checkAuthentication)
 
 export default router
