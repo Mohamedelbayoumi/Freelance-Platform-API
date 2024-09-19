@@ -8,5 +8,5 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
 
     console.error(err)
 
-    res.status(statusCode).json({ errorMessage: err.message })
+    res.status(statusCode).json({ errorName: err.name, errorMessage: err.message })
 }

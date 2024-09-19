@@ -7,12 +7,12 @@ const router = Router()
 
 const offerController = new OfferController()
 
-router.get('/offers', offerController.getAll)
+router.get('/offers', checkAuthentication, offerController.getAll)
 
 router.post('/offers', checkAuthentication, offerController.create)
 
-router.patch('/offers/:id', checkAuthentication)
+router.put('/offers/:offerId', checkAuthentication, offerController.update)
 
-router.delete('/offers/:id', checkAuthentication)
+router.delete('/offers/:offerId', checkAuthentication, offerController.delete)
 
 export default router

@@ -11,12 +11,17 @@ export const checkAuthentication = (req: Request, res: Response, next: NextFunct
     const extractedToken = type === 'Bearer' ? token : undefined
 
     if (!extractedToken) {
+
+        if (req.method === "GET") {
+            return next()
+        }
+
         throw new ApiError("No token found", 404)
     }
 
     const decodedToken = verify(extractedToken, process.env.JWT_SECRET_KEY as string) as ExtendedPayload
 
-    req.userId = decodedToken.userId
+    req['userId'] = decodedToken.userId
 
     next()
 }

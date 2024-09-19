@@ -96,6 +96,8 @@ model Offer {
   task                    Task       @relation(fields: [task_id], references: [id])
   freelancer_id           Int
   freelancer              Freelancer @relation(fields: [freelancer_id], references: [id])
+
+  @@unique([task_id, freelancer_id])
 }
 
 model Freelancer_Link {

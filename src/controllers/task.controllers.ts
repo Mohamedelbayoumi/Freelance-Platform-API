@@ -7,26 +7,26 @@ export class TaskController {
 
     public static async getTasks(req: Request, res: Response) {
 
-        const budget_min = Number(req.query.budget_min) || 0
+        const {
+            page = 1,
+            budget_min = 0,
+            budget_max = 1000,
+            duration = "",
+            title,
+            category
+        } = req.query
 
-        const budget_max = Number(req.query.budget_max) || 1000
-
-        const page = Number(req.query.page) || 1
-
-        const category = req.query.category as Category | undefined
-
-        const title = req.query.title as string | undefined
-
-        const duration = req.query.duration as string | undefined || ""
-
-        const deadlineDuration = duration.split('-')
-
-        const minDeadlineDuration = Number(deadlineDuration[0])
-
-        const maxDeadlineDuration = Number(deadlineDuration[1]) || 100
+        const [minDeadlineDuration, maxDeadlineDuration = 100] = duration.toString().split('-')
 
         const tasks = await TaskService.findTasks(
-            page, budget_min, budget_max, minDeadlineDuration, maxDeadlineDuration, title, category)
+            Number(page),
+            Number(budget_min),
+            Number(budget_max),
+            Number(minDeadlineDuration),
+            Number(maxDeadlineDuration),
+            title as string | undefined,
+            category as Category | undefined
+        )
 
         res.status(200).json({ tasks })
 
