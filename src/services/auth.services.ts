@@ -21,9 +21,16 @@ export class AuthService {
 
         const userModel = role === "client" ? prisma.client : prisma.freelancer
 
-        const user = await (userModel as any).findUnique({
+        const user = await (userModel as any).findFirst({
             where: {
-                email
+                OR: [
+                    {
+                        email: email
+                    },
+                    {
+                        phone_number: phoneNumber
+                    }
+                ]
             }
         })
 
