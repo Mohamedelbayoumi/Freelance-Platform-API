@@ -48,8 +48,6 @@ export class OfferService {
 
     private async findLoggedInFreelancerOffer(taskId: number, freelancerId: number) {
 
-        this.offerSelectData.id = true
-
         return await this.offerModel.findUnique({
             where: {
                 task_id_freelancer_id: {
@@ -57,7 +55,10 @@ export class OfferService {
                     freelancer_id: freelancerId
                 }
             },
-            select: this.offerSelectData
+            select: {
+                ...this.offerSelectData,
+                id: true
+            }
         })
 
     }
