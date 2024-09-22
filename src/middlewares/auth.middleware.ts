@@ -23,5 +23,7 @@ export const checkAuthentication = (req: Request, res: Response, next: NextFunct
 
     req['userId'] = decodedToken.userId
 
+    req['role'] = decodedToken.role
+
     next()
 }

@@ -57,6 +57,8 @@ export class OfferService {
             },
             select: {
                 ...this.offerSelectData,
+                asking_price: true,
+                implementation_duration: true,
                 id: true
             }
         })
