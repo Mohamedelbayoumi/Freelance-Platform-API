@@ -20,6 +20,19 @@ export class OfferService {
         description: true
     }
 
+    // public async findAllForClients(taskId:number, clientId: number) {
+    //     const offers = this.offerModel.findMany({
+    //         where: {
+    //             task: {
+    //                 client_id: clientId
+    //             },
+    //             task_id: taskId
+    //         }
+    //     })
+
+    //     return offers
+    // }
+
     public async findAll(taskId: number, freelancerId: number) {
 
         const offerWhereInput: Prisma.OfferWhereInput = {
