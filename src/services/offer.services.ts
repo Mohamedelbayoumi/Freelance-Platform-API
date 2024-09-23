@@ -6,6 +6,7 @@ import { ApiError } from '../utils/custom-error'
 export class OfferService {
 
     private offerModel = prisma.offer
+    private taskModel = prisma.task
 
     private offerSelectData: Prisma.OfferSelect = {
         freelancer: {
@@ -20,20 +21,32 @@ export class OfferService {
         description: true
     }
 
-    // public async findAllForClients(taskId:number, clientId: number) {
-    //     const offers = this.offerModel.findMany({
-    //         where: {
-    //             task: {
-    //                 client_id: clientId
-    //             },
-    //             task_id: taskId
-    //         }
-    //     })
+    public async findAllForClientTaskOwner(taskId: number, clientId: number) {
 
-    //     return offers
-    // }
+        const task = await this.taskModel.findUnique({
+            where: {
+                id: taskId
+            }
+        })
 
-    public async findAll(taskId: number, freelancerId: number) {
+        if (task?.client_id !== clientId) {
+            const offers = await this.findAll(taskId)
+            return { clientIsLogged: false, offers }
+        }
+
+        return await this.offerModel.findMany({
+            where: {
+                task_id: taskId
+            },
+            select: {
+                ...this.offerSelectData,
+                asking_price: true,
+                implementation_duration: true
+            }
+        })
+    }
+
+    public async findAll(taskId: number, freelancerId?: number) {
 
         const offerWhereInput: Prisma.OfferWhereInput = {
             task_id: taskId
@@ -78,7 +91,7 @@ export class OfferService {
 
     }
 
-    public async create(
+    public async createOfferAndUpdateTaskOfferCount(
         implementationDuration: number, askingPrice: number, taskId: number,
         description: string, freelancerId: number
     ) {
@@ -92,6 +105,29 @@ export class OfferService {
                     freelancer_id: freelancerId
                 }
             })
+            // return await prisma.$transaction(async () => {
+            //     // Create Offer
+            //     await this.offerModel.create({
+            //         data: {
+            //             description: description,
+            //             asking_price: askingPrice,
+            //             implementation_duration: implementationDuration,
+            //             task_id: taskId,
+            //             freelancer_id: freelancerId
+            //         }
+            //     })
+            //     // Update the number of offers for the task
+            //     await this.taskModel.update({
+            //         where: {
+            //             id: taskId
+            //         },
+            //         data: {
+            //             no_of_offers: {
+            //                 increment: 1
+            //             }
+            //         }
+            //     })
+            // })
         } catch (err) {
             if (err['code'] === 'P2002') {
                 throw new ApiError(`you can not add two offers for the same project`, 403)

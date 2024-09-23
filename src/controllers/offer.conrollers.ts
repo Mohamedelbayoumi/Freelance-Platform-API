@@ -12,13 +12,24 @@ export class OfferController {
 
     getAll = async (req: Request, res: Response) => {
 
-        const freelancerId: number = req['userId']
+        const userId: number = req['userId']
+
+        const role: string = req['role']
 
         const taskId = Number(req.query.task_id) || 0
 
-        const offers = await this.offerService.findAll(taskId, freelancerId)
+        if (role === 'client') {
+            const offersResult = await this.offerService.findAllForClientTaskOwner(taskId, userId)
 
-        res.status(200).json({ offers })
+            if (offersResult['clientIsLogged'] === false) {
+                return res.status(200).json({ offers: offersResult['offers'] })
+            }
+            res.status(200).json({ role: "Authenticated Client", offers: offersResult })
+        }
+        else {
+            const offers = await this.offerService.findAll(taskId, userId)
+            res.status(200).json({ offers })
+        }
     }
 
     create = async (req: Request, res: Response) => {
@@ -27,7 +38,9 @@ export class OfferController {
 
         const { implementationDuration, askingPrice, description, taskId } = req.body
 
-        await this.offerService.create(+implementationDuration, +askingPrice, +taskId, description, freelancerId)
+        await this.offerService.createOfferAndUpdateTaskOfferCount(
+            +implementationDuration, +askingPrice, +taskId, description, freelancerId
+        )
 
         res.status(201).json({ message: "Offer has been created" })
     }
