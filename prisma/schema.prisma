@@ -56,7 +56,7 @@ model Task {
   created_at        DateTime @default(now()) @db.Timestamp()
   deadline_duration Int      @db.SmallInt
   is_opened         Boolean  @default(true)
-  no_of_offers      Int      @db.SmallInt
+  no_of_offers      Int      @default(0) @db.SmallInt
   category          Category
   client_id         Int
   client            Client   @relation(fields: [client_id], references: [id])
