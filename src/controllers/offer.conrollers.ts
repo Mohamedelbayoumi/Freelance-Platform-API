@@ -51,10 +51,10 @@ export class OfferController {
 
         const freelancerId: number = req['userId']
 
-        const { askingPrice, implementation_duration, description } = req.body
+        const { askingPrice, implementationDuration, description } = req.body
 
         await this.offerService.update(
-            +offerId, +askingPrice, +implementation_duration, description, freelancerId
+            +offerId, +askingPrice, +implementationDuration, description, freelancerId
         )
 
         res.status(204).json()
