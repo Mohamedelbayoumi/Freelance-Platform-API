@@ -57,7 +57,7 @@ export class OfferController {
             +offerId, +askingPrice, +implementationDuration, description, freelancerId
         )
 
-        res.status(204).json()
+        res.status(200).json({ Message: "Offer Updated Successfully" })
     }
 
     delete = async (req: Request, res: Response) => {
@@ -66,8 +66,8 @@ export class OfferController {
 
         const freelancerId: number = req['userId']
 
-        await this.offerService.delete(+offerId, freelancerId)
+        await this.offerService.deleteOfferAndUpdateTaskOfferCount(+offerId, freelancerId)
 
-        res.status(204).json()
+        res.status(200).json({ Message: "Offer Deleted Succcesfully" })
     }
 } 

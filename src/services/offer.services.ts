@@ -69,6 +69,10 @@ export class OfferService {
 
         const offer = await this.findLoggedInFreelancerOffer(taskId, freelancerId)
 
+        if (!offer) {
+            return offers
+        }
+
         return [offer, ...offers]
     }
 
@@ -96,38 +100,35 @@ export class OfferService {
         description: string, freelancerId: number
     ) {
         try {
-            await this.offerModel.create({
-                data: {
-                    description: description,
-                    asking_price: askingPrice,
-                    implementation_duration: implementationDuration,
-                    task_id: taskId,
-                    freelancer_id: freelancerId
-                }
+            return await prisma.$transaction(async () => {
+                // Create Offer
+                await this.offerModel.create({
+                    data: {
+                        description: description,
+                        asking_price: askingPrice,
+                        implementation_duration: implementationDuration,
+                        task_id: taskId,
+                        freelancer_id: freelancerId
+                    },
+                    select: {
+                        id: true
+                    }
+                })
+                // increase the number of offers for the task by 1
+                await this.taskModel.update({
+                    where: {
+                        id: taskId
+                    },
+                    data: {
+                        no_of_offers: {
+                            increment: 1
+                        }
+                    },
+                    select: {
+                        id: true
+                    }
+                })
             })
-            // return await prisma.$transaction(async () => {
-            //     // Create Offer
-            //     await this.offerModel.create({
-            //         data: {
-            //             description: description,
-            //             asking_price: askingPrice,
-            //             implementation_duration: implementationDuration,
-            //             task_id: taskId,
-            //             freelancer_id: freelancerId
-            //         }
-            //     })
-            //     // Update the number of offers for the task
-            //     await this.taskModel.update({
-            //         where: {
-            //             id: taskId
-            //         },
-            //         data: {
-            //             no_of_offers: {
-            //                 increment: 1
-            //             }
-            //         }
-            //     })
-            // })
         } catch (err) {
             if (err['code'] === 'P2002') {
                 throw new ApiError(`you can not add two offers for the same project`, 403)
@@ -148,16 +149,39 @@ export class OfferService {
             where: {
                 id: offerId,
                 freelancer_id: freelancerId
+            },
+            select: {
+                id: true
             }
         })
     }
 
-    public async delete(offerId: number, freelancerId: number) {
-        return await this.offerModel.delete({
-            where: {
-                id: offerId,
-                freelancer_id: freelancerId
-            }
+    public async deleteOfferAndUpdateTaskOfferCount(offerId: number, freelancerId: number) {
+        await prisma.$transaction(async () => {
+            // delete the offer
+            const offer = await this.offerModel.delete({
+                where: {
+                    id: offerId,
+                    freelancer_id: freelancerId
+                },
+                select: {
+                    task_id: true
+                }
+            })
+            // decrease the numbers of offer for the task by 1
+            await this.taskModel.update({
+                where: {
+                    id: offer.task_id
+                },
+                data: {
+                    no_of_offers: {
+                        decrement: 1
+                    }
+                },
+                select: {
+                    id: true
+                }
+            })
         })
     }
 }
