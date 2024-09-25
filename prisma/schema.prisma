@@ -35,6 +35,7 @@ model Freelancer {
   phone_number           String               @unique
   image_profile          String?
   bio                    String?
+  skills                 Json?
   hourly_rate            Int                  @default(0)
   average_rating         Decimal              @default(0) @db.Decimal(2, 1)
   profile_views_per_week Int                  @default(0) @db.SmallInt
