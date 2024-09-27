@@ -12,7 +12,7 @@ export const checkAuthentication = (req: Request, res: Response, next: NextFunct
 
     if (!extractedToken) {
 
-        if (req.method === "GET") {
+        if (req.method === "GET" && req.path === "offers") {
             return next()
         }
 
