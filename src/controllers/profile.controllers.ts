@@ -7,12 +7,21 @@ export class ProfileController {
         this.profileService = new ProfileService()
     }
 
-    show = async (req: Request, res: Response, next: NextFunction) => {
+    showProfileData = async (req: Request, res: Response, next: NextFunction) => {
 
         const userId = req['userId']
 
         const profileData = await this.profileService.findUserProfileData(userId)
 
         res.status(200).json({ profileData })
+    }
+
+    showProjectsGallery = async (req: Request, res: Response, next: NextFunction) => {
+
+        const userId = req['userId']
+
+        const projectsGallertData = await this.profileService.findPrpjectsGallery(userId)
+
+        res.status(200).json({ projectsGallertData })
     }
 }

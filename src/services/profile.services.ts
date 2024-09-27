@@ -34,14 +34,22 @@ export class ProfileService {
     //         })
     //     }
 
-    //     public async findPrpjectsGallery(userId: number) {
-    //         await this.projects.findMany({
-    //             where: {
-    //                 freelancer_id: userId
-    //             },
-    //             select: {
-
-    //             }
-    //         })
-    //     }
+    public async findPrpjectsGallery(userId: number) {
+        return await this.projects.findMany({
+            where: {
+                freelancer_id: userId
+            },
+            select: {
+                id: true,
+                title: true,
+                no_of_views: true,
+                project_images: {
+                    take: 1,
+                    select: {
+                        project_image: true
+                    }
+                }
+            }
+        })
+    }
 }
