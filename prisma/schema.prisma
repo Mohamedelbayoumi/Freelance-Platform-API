@@ -114,6 +114,7 @@ model Freelancer_Project {
   title          String
   description    String
   link           String?
+  no_of_views    Int                        @default(0) @db.SmallInt
   project_images Freelancer_Project_Image[]
   freelancer_id  Int
   freelancer     Freelancer                 @relation(fields: [freelancer_id], references: [id])
