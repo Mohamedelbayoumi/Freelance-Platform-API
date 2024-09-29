@@ -21,18 +21,18 @@ export class ProfileService {
         })
     }
 
-    //     public async findReviews(userId: number) {
-    //         return await this.reviewModel.findMany({
-    //             where: {
-    //                 freelancer_id: userId
-    //             },
-    //             select: {
-    //                 id: true,
-    //                 review_text: true,
-    //                 rating: true
-    //             }
-    //         })
-    //     }
+    public async findReviews(userId: number) {
+        return await this.reviewModel.findMany({
+            where: {
+                freelancer_id: userId
+            },
+            select: {
+                id: true,
+                review_text: true,
+                rating: true
+            }
+        })
+    }
 
     public async findPrpjectsGallery(userId: number) {
         return await this.projects.findMany({
@@ -49,6 +49,21 @@ export class ProfileService {
                         project_image: true
                     }
                 }
+            }
+        })
+    }
+
+    public async updateFreelancerProfile(freelancerId: number, bio: string, skills: string[]) {
+        return await this.freelancerModel.update({
+            data: {
+                bio: bio,
+                skills: skills
+            },
+            where: {
+                id: freelancerId
+            },
+            select: {
+                id: true
             }
         })
     }

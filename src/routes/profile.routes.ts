@@ -10,4 +10,8 @@ router.get('/profile', checkAuthentication, profileController.showProfileData)
 
 router.get('/profile/gallery', checkAuthentication, profileController.showProjectsGallery)
 
+router.get('/profile/reviews', checkAuthentication, profileController.showReviews)
+
+router.patch('/profile', checkAuthentication, profileController.editProfileData)
+
 export default router
