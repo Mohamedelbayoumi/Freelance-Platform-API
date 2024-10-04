@@ -20,7 +20,7 @@ export class ProfileController {
 
         const userId = req['userId']
 
-        const projectsGallertData = await this.profileService.findPrpjectsGallery(userId)
+        const projectsGallertData = await this.profileService.findProjectsGallery(userId)
 
         res.status(200).json({ projectsGallertData })
     }

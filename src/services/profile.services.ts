@@ -3,12 +3,12 @@ import { prisma } from '../utils/prisma-client'
 export class ProfileService {
     private freelancerModel = prisma.freelancer
     private reviewModel = prisma.freelancer_Review
-    private projects = prisma.freelancer_Project
+    private projectsModel = prisma.freelancer_Project
 
-    public async findUserProfileData(userId: number) {
+    public async findUserProfileData(freelancerId: number) {
         return await this.freelancerModel.findUnique({
             where: {
-                id: userId
+                id: freelancerId
             },
             select: {
                 first_name: true,
@@ -21,10 +21,10 @@ export class ProfileService {
         })
     }
 
-    public async findReviews(userId: number) {
+    public async findReviews(freelancerId: number) {
         return await this.reviewModel.findMany({
             where: {
-                freelancer_id: userId
+                freelancer_id: freelancerId
             },
             select: {
                 id: true,
@@ -34,10 +34,10 @@ export class ProfileService {
         })
     }
 
-    public async findPrpjectsGallery(userId: number) {
-        return await this.projects.findMany({
+    public async findProjectsGallery(freelancerId: number) {
+        return await this.projectsModel.findMany({
             where: {
-                freelancer_id: userId
+                freelancer_id: freelancerId
             },
             select: {
                 id: true,
