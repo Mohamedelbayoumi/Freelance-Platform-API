@@ -16,10 +16,10 @@ export class FreelacnerProjectController {
 
         const { title, description, link } = req.body
 
-        const imagePath = req.file?.filename as string
+        const { file } = req
 
         await this.freelacnerProjectService.createProject(
-            title, description, imagePath, link, freelancerId
+            title, description, link, freelancerId, file
         )
 
         res.status(200).json({ message: "Project Added Succcessfully" })

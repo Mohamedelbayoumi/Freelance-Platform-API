@@ -43,12 +43,7 @@ export class ProfileService {
                 id: true,
                 title: true,
                 no_of_views: true,
-                project_images: {
-                    take: 1,
-                    select: {
-                        project_image: true
-                    }
-                }
+                project_image: true
             }
         })
     }
