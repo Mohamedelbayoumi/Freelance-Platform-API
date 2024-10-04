@@ -32,4 +32,30 @@ export class FreelacnerProjectService {
             }
         })
     }
+
+    async findProjectById(projectId: number) {
+        return await this.updateProjectViewsAndReturnData(projectId)
+    }
+
+    private async updateProjectViewsAndReturnData(projectId: number) {
+
+        return await this.projectModel.update({
+            where: {
+                id: projectId
+            },
+            data: {
+                no_of_views: {
+                    increment: 1
+                }
+            },
+            select: {
+                title: true,
+                description: true,
+                link: true,
+                no_of_views: true,
+                project_image: true
+            }
+        })
+
+    }
 }

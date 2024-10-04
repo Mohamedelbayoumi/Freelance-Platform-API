@@ -24,4 +24,13 @@ export class FreelacnerProjectController {
 
         res.status(200).json({ message: "Project Added Succcessfully" })
     }
+
+    getProject = async (req: Request, res: Response) => {
+
+        const projectId = req.params.projectId
+
+        const project = await this.freelacnerProjectService.findProjectById(+projectId)
+
+        res.status(200).json({ project })
+    }
 }

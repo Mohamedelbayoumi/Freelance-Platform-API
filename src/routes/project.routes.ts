@@ -9,4 +9,6 @@ const freelacnerProjectController = new FreelacnerProjectController()
 
 router.post('/freelancer_projects', checkAuthentication, uploadMiddleware, freelacnerProjectController.addProject)
 
+router.get('/freelancer_projects/:projectId', freelacnerProjectController.getProject)
+
 export default router
