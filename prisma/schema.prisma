@@ -110,21 +110,14 @@ model Freelancer_Link {
 }
 
 model Freelancer_Project {
-  id             Int                        @id @default(autoincrement())
-  title          String
-  description    String
-  link           String?
-  no_of_views    Int                        @default(0) @db.SmallInt
-  project_images Freelancer_Project_Image[]
-  freelancer_id  Int
-  freelancer     Freelancer                 @relation(fields: [freelancer_id], references: [id])
-}
-
-model Freelancer_Project_Image {
-  id            Int                @id @default(autoincrement())
-  project_image String
-  project_id    Int
-  project       Freelancer_Project @relation(fields: [project_id], references: [id])
+  id            Int        @id @default(autoincrement())
+  title         String
+  description   String
+  link          String?
+  no_of_views   Int        @default(0) @db.SmallInt
+  project_image String?
+  freelancer_id Int
+  freelancer    Freelancer @relation(fields: [freelancer_id], references: [id])
 }
 
 enum Category {
