@@ -49,7 +49,11 @@ export class TaskController {
     }
 
     createTask = async (req: Request, res: Response) => {
-        await this.taskService.createTask()
+
+        const clientId = req['userId']
+
+        await this.taskService.createTask(clientId, req.body)
+
         res.status(201).json({ message: "task created" })
     }
 }

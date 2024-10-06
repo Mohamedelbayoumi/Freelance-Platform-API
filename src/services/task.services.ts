@@ -1,29 +1,32 @@
 import { Category } from '@prisma/client'
 
-import { Task } from '../types/task'
+import { Task } from '../types/task.interface'
 import { prisma } from '../utils/prisma-client'
 
 export class TaskService {
 
     private taskModel = prisma.task
 
-    async createTask() {
+    async createTask(clientId: number, taskData: Task) {
 
-        // const { title, description, category, duration, minPrice, maxPrice } = taskData
+        const { title, description, category, duration, minPrice, maxPrice, keywords } = taskData
 
-        // await prisma.task.create({
-        //     data: {
-        //         title: "protofilo website",
-        //         description: "you should create a website that represent the most important projects for some person",
-        //         category: 'Frontend_Development',
-        //         min_price: 200,
-        //         max_price: 220,
-        //         client_id: 1,
-        //         deadline_duration: 4
-        //     }
-        // })
+        await this.taskModel.create({
+            data: {
+                title,
+                description,
+                category,
+                deadline_duration: +duration,
+                min_price: +minPrice,
+                max_price: +maxPrice,
+                keywords,
+                client_id: clientId
+            },
+            select: {
+                id: true
+            }
+        })
 
-        console.log("created")
     }
 
     async findTasks(
