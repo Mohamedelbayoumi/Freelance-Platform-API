@@ -5,11 +5,9 @@ import { prisma } from '../utils/prisma-client'
 
 export class TaskService {
 
-    // private taskModel: Prisma.TaskDelegate<DefaultArgs> = prisma.task
-
     private taskModel = prisma.task
 
-    public static async createTask() {
+    async createTask() {
 
         // const { title, description, category, duration, minPrice, maxPrice } = taskData
 
@@ -28,7 +26,7 @@ export class TaskService {
         console.log("created")
     }
 
-    public static async findTasks(
+    async findTasks(
         page: number, budget_min: number, budget_max: number,
         minDeadlineDuration: number, maxDeadlineDuration: number,
         title?: string, category?: Category
@@ -80,7 +78,7 @@ export class TaskService {
         return tasks
     }
 
-    public static async findTaskById(id: number) {
+    async findTaskById(id: number) {
         return await prisma.task.findUnique({
             where: {
                 id

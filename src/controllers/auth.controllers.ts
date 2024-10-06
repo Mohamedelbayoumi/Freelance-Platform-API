@@ -2,28 +2,37 @@ import { Request, Response } from "express"
 
 import { AuthService } from '../services/auth.services'
 
+export class AuthController {
 
-export const signupController = async (req: Request, res: Response) => {
+    private authService: AuthService
 
-    new AuthService(req.body.role)
+    constructor() {
+        this.authService = new AuthService()
+    }
 
-    await AuthService.signUpUser(req.body)
+    signupController = async (req: Request, res: Response) => {
 
-    res.status(201).json({ message: "User has been created" })
+        await this.authService.signUpUser(req.body)
+
+        res.status(201).json({ message: "User has been created" })
+    }
+
+    loginController = async (req: Request, res: Response) => {
+
+        const { email, password, role } = req.body
+
+        const token = await this.authService.loginUser(role, email, password)
+
+        res.status(200).json({ token: token, message: "User loggedin successfully" })
+    }
+
+    getUsers = async (req: Request, res: Response) => {
+
+        const users = await this.authService.getUsers()
+
+        res.status(200).json({ data: users })
+    }
+
 }
 
-export const loginController = async (req: Request, res: Response) => {
 
-    const { email, password, role } = req.body
-
-    const token = await AuthService.loginUser(role, email, password)
-
-    res.status(200).json({ token: token, message: "User loggedin successfully" })
-}
-
-export const getUsers = async (req: Request, res: Response) => {
-
-    const users = await AuthService.getUsers()
-
-    res.status(200).json({ data: users })
-}

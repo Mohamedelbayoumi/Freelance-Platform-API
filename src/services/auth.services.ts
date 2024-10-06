@@ -9,17 +9,14 @@ import { ApiError } from '../utils/custom-error'
 
 export class AuthService {
 
-    private userModel
+    private cleientModel = prisma.client
+    private freelancerModel = prisma.freelancer
 
-    constructor(role: string) {
-        this.userModel = role === "client" ? prisma.client : prisma.freelancer
-    }
-
-    public static async signUpUser(userData: User): Promise<void> {
+    async signUpUser(userData: User): Promise<void> {
 
         const { firstName, lastName, email, password, phoneNumber, role, country } = userData
 
-        const userModel = role === "client" ? prisma.client : prisma.freelancer
+        const userModel = role === "client" ? this.cleientModel : this.freelancerModel
 
         const user = await (userModel as any).findFirst({
             where: {
@@ -52,16 +49,16 @@ export class AuthService {
         })
     }
 
-    public static async getUsers() {
+    async getUsers() {
         const freelancers = await prisma.freelancer.findMany()
         const clients = await prisma.client.findMany()
         return { freelancers, clients }
     }
 
-    public static async loginUser(role: "client" | "freelancer", email: string, password: string): Promise<string | undefined> {
+    async loginUser(role: "client" | "freelancer", email: string, password: string): Promise<string | undefined> {
 
 
-        const userModel = role === "client" ? prisma.client : prisma.freelancer
+        const userModel = role === "client" ? this.cleientModel : this.freelancerModel
 
         const user = await (userModel as any).findUnique({
             where: {

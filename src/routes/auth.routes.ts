@@ -1,13 +1,14 @@
 import { Router } from "express"
 
-import { signupController, getUsers, loginController } from '../controllers/auth.controllers'
+import { AuthController } from '../controllers/auth.controllers'
 
 const router = Router()
+const authController = new AuthController()
 
-router.post('/signup', signupController)
+router.post('/signup', authController.signupController)
 
-router.get('/users', getUsers)
+router.get('/users', authController.getUsers)
 
-router.post('/login', loginController)
+router.post('/login', authController.loginController)
 
 export default router

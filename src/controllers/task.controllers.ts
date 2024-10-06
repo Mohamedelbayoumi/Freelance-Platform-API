@@ -5,7 +5,14 @@ import { TaskService } from '../services/task.services'
 
 export class TaskController {
 
-    public static async getTasks(req: Request, res: Response) {
+    private taskService: TaskService
+
+    constructor() {
+        this.taskService = new TaskService()
+    }
+
+
+    getTasks = async (req: Request, res: Response) => {
 
         const {
             page = 1,
@@ -18,7 +25,7 @@ export class TaskController {
 
         const [minDeadlineDuration, maxDeadlineDuration = 100] = duration.toString().split('-')
 
-        const tasks = await TaskService.findTasks(
+        const tasks = await this.taskService.findTasks(
             Number(page),
             Number(budget_min),
             Number(budget_max),
@@ -32,17 +39,17 @@ export class TaskController {
 
     }
 
-    public static async getTask(req: Request, res: Response) {
+    getTask = async (req: Request, res: Response) => {
 
         const id = + req.params.id || 0
 
-        const task = await TaskService.findTaskById(id)
+        const task = await this.taskService.findTaskById(id)
 
         res.status(200).json({ task })
     }
 
-    public static async createTask(req: Request, res: Response) {
-        await TaskService.createTask()
+    createTask = async (req: Request, res: Response) => {
+        await this.taskService.createTask()
         res.status(201).json({ message: "task created" })
     }
 }
