@@ -23,7 +23,7 @@ export class AuthController {
 
         const token = await this.authService.loginUser(role, email, password)
 
-        res.status(200).json({ token: token, message: "User loggedin successfully" })
+        res.status(200).json({ token: token, message: "User loggedin successfully", role })
     }
 
     getUsers = async (req: Request, res: Response) => {

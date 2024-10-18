@@ -9,7 +9,7 @@ export class ProfileController {
 
     showProfileData = async (req: Request, res: Response) => {
 
-        const userId = req['userId']
+        const userId = Number(req.query.freelancer_id) || req['userId']
 
         const profileData = await this.profileService.findUserProfileData(userId)
 
